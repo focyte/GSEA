@@ -19,3 +19,16 @@ kk <- enrichKEGG(gene         = dge[["ENTREZID"]],
                  organism     = 'hsa',
                  pvalueCutoff = 0.05)
 dotplot(kk, showCategory=15) 
+
+
+
+
+#For data without FC etc
+dge = read.csv("~/A2-KEGGS/eclipGenes.csv", row.names=1)
+dge["ENTREZID"] = mapIds(org.Hs.eg.db, row.names(dge), 'ENTREZID', 'SYMBOL')
+dge=dge[complete.cases(dge), ]
+
+kk <- enrichKEGG(gene         = dge[["ENTREZID"]],
+                 organism     = 'hsa',
+                 pvalueCutoff = 0.05)
+dotplot(kk)
