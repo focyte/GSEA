@@ -1,0 +1,21 @@
+library(clusterProfiler)
+
+# load homo sapiens organism database
+library('org.Hs.eg.db')
+
+# Load a csv file of your gene expression data, Fold Change (FC) and pvalue needed for this method
+dge = read.csv("x.csv", row.names=1)
+
+# convert gene symbols into ENTREZ IDs
+dge["ENTREZID"] = mapIds(org.Hs.eg.db, row.names(dge), 'ENTREZID', 'SYMBOL')
+
+dge=dge[complete.cases(dge), ]
+
+# set the cut offs for FC and pvalue
+dge = dge[(dge["padj"]<0.05) & (abs(dge["log2FoldChange"])>0.5),]
+
+
+kk <- enrichKEGG(gene         = dge[["ENTREZID"]],
+                 organism     = 'hsa',
+                 pvalueCutoff = 0.05)
+dotplot(kk, showCategory=15) 
