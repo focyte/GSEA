@@ -35,7 +35,7 @@ Rscript enrichKEGG.R <input_file> <padj_threshold> <log2FoldChange_threshold> <o
 ```
 
 ```console
-Rscript --vanilla enrichKEGG.R significant_genes.csv <input_file> <padj_threshold> <log2FoldChange_threshold> <output_png> <showCategory_number>
+Rscript --vanilla enrichKEGG.R <input_file> <padj_threshold> <log2FoldChange_threshold> <output_png> <showCategory_number>
 ```
 
 ### gseKEGG Script
@@ -46,8 +46,7 @@ Command-line Arguments
 <input_file>: CSV file containing gene expression data.
 
 ```bash
-Rscript script.R input.csv 
-<input_file> <padj_threshold> <showCategory_number>
+Rscript script.R <input_file> <padj_threshold> <showCategory_number>
 ```
 
 
