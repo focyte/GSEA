@@ -34,6 +34,10 @@ Command-line Arguments
 Rscript enrichKEGG.R input.csv 0.05 0.5 output_plot.png 15
 ```
 
+```console
+Rscript --vanilla enrichKEGG.R significant_genes.csv 0.05 0.5 1.png 15
+```
+
 ### gseKEGG Script
 
 The gseKEGG script performs KEGG pathway enrichment analysis using the DOSE package.
