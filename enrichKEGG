@@ -1,34 +1,44 @@
 library(clusterProfiler)
+library(org.Hs.eg.db)
 
-# load homo sapiens organism database
-library('org.Hs.eg.db')
+# Command-line arguments
+args <- commandArgs(trailingOnly = TRUE)
 
-# Load a csv file of your gene expression data, Fold Change (FC) and pvalue needed for this method
-dge = read.csv("x.csv", row.names=1)
+# Check if the required arguments are provided
+if (length(args) < 5) {
+  stop("Usage: Rscript script.R <input_file> <padj_threshold> <log2FoldChange_threshold> <output_png> <showCategory_number>")
+}
 
-# convert gene symbols into ENTREZ IDs
-dge["ENTREZID"] = mapIds(org.Hs.eg.db, row.names(dge), 'ENTREZID', 'SYMBOL')
+# Assign command-line arguments to variables
+input_file <- args[1]
+padj_threshold <- as.numeric(args[2])
+log2FoldChange_threshold <- as.numeric(args[3])
+output_png <- args[4]
+showCategory_number <- as.numeric(args[5])
 
-dge=dge[complete.cases(dge), ]
+# Load homo sapiens organism database
+org_db <- 'org.Hs.eg.db'
+if (!requireNamespace(org_db, quietly = TRUE)) {
+  install.packages(org_db)
+}
+library(org.Hs.eg.db)
 
-# set the cut offs for FC and pvalue
-dge = dge[(dge["padj"]<0.05) & (abs(dge["log2FoldChange"])>0.5),]
+# Load a csv file of your gene expression data
+dge <- read.csv(input_file, row.names = 1)
 
+# Convert gene symbols into ENTREZ IDs
+dge["ENTREZID"] <- mapIds(org.Hs.eg.db, row.names(dge), 'ENTREZID', 'SYMBOL')
 
-kk <- enrichKEGG(gene         = dge[["ENTREZID"]],
-                 organism     = 'hsa',
+dge <- dge[complete.cases(dge), ]
+
+# Set the cut-offs for padj and log2FoldChange
+dge <- dge[(dge["padj"] < padj_threshold) & (abs(dge["log2FoldChange"]) > log2FoldChange_threshold),]
+
+# Perform KEGG pathway enrichment analysis
+kk <- enrichKEGG(gene = dge[["ENTREZID"]],
+                 organism = 'hsa',
                  pvalueCutoff = 0.05)
-dotplot(kk, showCategory=15) 
 
-
-
-
-#For data without FC etc
-dge = read.csv("~/A2-KEGGS/eclipGenes.csv", row.names=1)
-dge["ENTREZID"] = mapIds(org.Hs.eg.db, row.names(dge), 'ENTREZID', 'SYMBOL')
-dge=dge[complete.cases(dge), ]
-
-kk <- enrichKEGG(gene         = dge[["ENTREZID"]],
-                 organism     = 'hsa',
-                 pvalueCutoff = 0.05)
-dotplot(kk)
+# Create a dotplot and save it as a PNG file
+dotplot(kk, showCategory = showCategory_number)
+ggsave(output_png, plot = last_plot(), device = "png")
