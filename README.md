@@ -31,11 +31,11 @@ Command-line Arguments
 <showCategory_number>: Number of categories to show in the dotplot.
 
 ```bash
-Rscript enrichKEGG.R input.csv 0.05 0.5 output_plot.png 15
+Rscript enrichKEGG.R <input_file> <padj_threshold> <log2FoldChange_threshold> <output_png> <showCategory_number>
 ```
 
 ```console
-Rscript --vanilla enrichKEGG.R significant_genes.csv 0.05 0.5 1.png 15
+Rscript --vanilla enrichKEGG.R significant_genes.csv <input_file> <padj_threshold> <log2FoldChange_threshold> <output_png> <showCategory_number>
 ```
 
 ### gseKEGG Script
@@ -46,7 +46,8 @@ Command-line Arguments
 <input_file>: CSV file containing gene expression data.
 
 ```bash
-Rscript script.R input.csv 0.05 10
+Rscript script.R input.csv 
+<input_file> <padj_threshold> <showCategory_number>
 ```
 
 
